@@ -7,6 +7,7 @@ pipeline {
     // Các biến môi trường dùng chung trong toàn bộ pipeline
     environment {
         APP_NAME = 'iot-telemetry-backend'
+        IMAGE_TAG = 'v1'
     }
 
     stages {
@@ -38,6 +39,22 @@ pipeline {
                 always {
                     junit 'target/surefire-reports/*.xml'
                 }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Đang xây dựng Docker image cho ứng dụng...'
+                // Xây dựng Docker image với tag cụ thể
+                sh "docker build -t ${APP_NAME}:${IMAGE_TAG} ."
+            }
+        }
+
+        stage('Deploy Application') {
+            steps {
+                echo 'Đang triển khai hệ thống bằng Docker Compose...'
+                sh 'docker-compose down' // Dừng các container cũ nếu có
+                sh 'docker-compose up -d' // Triển khai container mới ở chế độ detached
             }
         }
     }
