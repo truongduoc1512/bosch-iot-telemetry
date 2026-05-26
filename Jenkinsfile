@@ -53,8 +53,8 @@ pipeline {
         stage('Deploy Application') {
             steps {
                 echo 'Đang triển khai hệ thống bằng Docker Compose...'
-                sh 'docker-compose down' // Dừng các container cũ nếu có
-                sh 'docker-compose up -d' // Triển khai container mới ở chế độ detached
+                sh 'docker compose down' // Dừng các container cũ nếu có
+                sh 'docker compose up -d' // Triển khai container mới ở chế độ detached
             }
         }
     }
