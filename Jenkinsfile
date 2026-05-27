@@ -53,8 +53,15 @@ pipeline {
         stage('Deploy Application') {
             steps {
                 echo 'Đang triển khai hệ thống bằng Docker Compose...'
-                sh 'docker compose down' // Dừng các container cũ nếu có
-                sh 'docker compose up -d' // Triển khai container mới ở chế độ detached
+
+                withCredentials([
+                    string(credentialsId: 'db-root-pass', variable: 'DB_ROOT_PASSWORD'),
+                    string(credentialsId: 'db-user', variable: 'DB_USER'),
+                    string(credentialsId: 'db-pass', variable: 'DB_PASSWORD')
+                ]) {
+                    sh 'docker compose down' // Dừng các container cũ nếu có
+                    sh 'docker compose up -d' // Triển khai container mới ở chế độ detached
+                }
             }
         }
     }
